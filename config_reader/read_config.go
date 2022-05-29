@@ -43,3 +43,10 @@ type Config struct {
 	NotifyConfig   NotifyConfig
 	AlarmManager   AlarmManager
 }
+
+func ReadConfig() (Config, error) {
+
+	var readedConfig Config
+
+	return readedConfig, nil
+}

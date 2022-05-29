@@ -107,7 +107,7 @@ scan:
   stage: scan
   image: daedalusproject/base_sonar_scanner
   script:
-  - sonar-scanner -Dsonar.projectKey=alarmstatusa -Dsonar.sources=. -Dsonar.host.url=https://sonarqube.windmaker.net -Dsonar.login=${SONAR_LOGIN} -Dsonar.exclusions="*/*_test.go" -Dsonar.go.coverage.reportPaths="cover/coverage.report"
+  - sonar-scanner -Dsonar.projectKey=alarmstatuswathcer -Dsonar.sources=. -Dsonar.host.url=https://sonarqube.windmaker.net -Dsonar.login=${SONAR_LOGIN} -Dsonar.exclusions="*/*_test.go" -Dsonar.go.coverage.reportPaths="cover/coverage.report"
   dependencies:
   - coverage
 
