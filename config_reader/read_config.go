@@ -1,5 +1,11 @@
 package config
 
+import (
+	"errors"
+
+	viperLib "github.com/spf13/viper"
+)
+
 type RabbitmqConfig struct {
 	User      string
 	Password  string
@@ -46,7 +52,40 @@ type Config struct {
 
 func ReadConfig() (Config, error) {
 
-	var readedConfig Config
+	var configFileLocation string
+	var config Config
 
-	return readedConfig, nil
+	var envVariable string = "ALARM_STATUS_WATCHER_CONFIG_FILE_LOCATION"
+
+	requiredVariables := []string{"redis", "alarmmanager", "notify"}
+
+	//	redisRequiredVariables := []string{"ip", "port",  "password",  "database"}
+	//
+	//	webServerRequiredVariables := []string{"port"}
+	//
+	viper := viperLib.New()
+
+	//Look for config file location defined as env var
+	viper.BindEnv(envVariable)
+	configFileLocation = viper.GetString(envVariable)
+	if configFileLocation == "" {
+		// Get config file from default location
+		return config, errors.New(errors.New("Environment variable ALARM_STATUS_WATCHER_CONFIG_FILE_LOCATION is not defined.").Error())
+	}
+
+	viper.SetConfigName("config")
+	viper.SetConfigType("toml")
+	viper.AddConfigPath(configFileLocation)
+
+	if err := viper.ReadInConfig(); err != nil {
+		return config, errors.New(errors.New("Fatal error reading config file: ").Error() + err.Error())
+	}
+
+	for _, requiredVariable := range requiredVariables {
+		if !viper.IsSet(requiredVariable) {
+			return config, errors.New("Fatal error config: no " + requiredVariable + " field was found.")
+		}
+	}
+
+	return config, nil
 }
