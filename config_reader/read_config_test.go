@@ -39,6 +39,19 @@ func TestProcessConfigWithoutAnyRequiredField(t *testing.T) {
 	}
 }
 
+func TestProcessConfigWithNoRedisPort(t *testing.T) {
+
+	os.Setenv("ALARM_STATUS_WATCHER_CONFIG_FILE_LOCATION", "./config_files_test/config_with_no_redis_port/")
+	_, err := ReadConfig()
+	if err == nil {
+		t.Errorf("ReadConfig method without reids port should fail.")
+	} else {
+		if err.Error() != "Fatal error config: no redis port was defined." {
+			t.Errorf("Error should be 'Fatal error config: no redis port was defined', but error was '%s'.", err.Error())
+		}
+	}
+}
+
 func TestOkConfig(t *testing.T) {
 
 	os.Setenv("ALARM_STATUS_WATCHER_CONFIG_FILE_LOCATION", "./config_files_test/config_ok/")

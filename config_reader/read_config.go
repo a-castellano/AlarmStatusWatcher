@@ -59,7 +59,7 @@ func ReadConfig() (Config, error) {
 
 	requiredVariables := []string{"redis", "alarmmanager", "notify"}
 
-	//	redisRequiredVariables := []string{"ip", "port",  "password",  "database"}
+	redisRequiredVariables := []string{"ip", "port", "password", "database"}
 	//
 	//	webServerRequiredVariables := []string{"port"}
 	//
@@ -87,5 +87,16 @@ func ReadConfig() (Config, error) {
 		}
 	}
 
+	// Redis
+	for _, requiredRedisVariable := range redisRequiredVariables {
+		if !viper.IsSet("redis." + requiredRedisVariable) {
+			return config, errors.New("Fatal error config: no redis " + requiredRedisVariable + " was defined.")
+		}
+
+	}
+	config.RedisServer.IP = viper.GetString("redis.ip")
+	config.RedisServer.Port = viper.GetInt("redis.port")
+	config.RedisServer.Password = viper.GetString("redis.password")
+	config.RedisServer.Database = viper.GetInt("redis.database")
 	return config, nil
 }
