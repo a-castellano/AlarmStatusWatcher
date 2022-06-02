@@ -60,9 +60,12 @@ func ReadConfig() (Config, error) {
 	requiredVariables := []string{"redis", "alarmmanager", "notify"}
 
 	redisRequiredVariables := []string{"ip", "port", "password", "database"}
-	//
-	//	webServerRequiredVariables := []string{"port"}
-	//
+
+	alarmManagerRequiredVariables := []string{"port", "host"}
+
+	notifyRequiredVariables := []string{"online", "statuschange", "queue", "mail"}
+	mailRequiredVariables := []string{"mailfrom", "maildomain", "host", "port", "user", "password"}
+
 	viper := viperLib.New()
 
 	//Look for config file location defined as env var
@@ -98,5 +101,44 @@ func ReadConfig() (Config, error) {
 	config.RedisServer.Port = viper.GetInt("redis.port")
 	config.RedisServer.Password = viper.GetString("redis.password")
 	config.RedisServer.Database = viper.GetInt("redis.database")
+
+	// AlarmManager
+	for _, requiredAlarmManagerVariable := range alarmManagerRequiredVariables {
+		if !viper.IsSet("alarmmanager." + requiredAlarmManagerVariable) {
+			return config, errors.New("Fatal error config: no alarmmanager " + requiredAlarmManagerVariable + " was defined.")
+		}
+
+	}
+	config.AlarmManager.Host = viper.GetString("alarmmanager.host")
+	config.AlarmManager.Port = viper.GetInt("alarmmanager.port")
+
+	// Notify
+	for _, requiredNotifyVariable := range notifyRequiredVariables {
+		if !viper.IsSet("notify." + requiredNotifyVariable) {
+			return config, errors.New("Fatal error config: no notify " + requiredNotifyVariable + " was defined.")
+		}
+
+	}
+	config.NotifyConfig.NotifyStatusChange = viper.GetBool("notify.statuschange")
+	config.NotifyConfig.NotifyOffline = viper.GetBool("notify.online")
+	config.NotifyConfig.SendEmailNotification = viper.GetBool("notify.mail")
+	config.NotifyConfig.SendQueueNotification = viper.GetBool("notify.queue")
+
+	// Mail is required
+	if config.NotifyConfig.SendEmailNotification {
+		// Mail
+		if !viper.IsSet("mail") {
+			return config, errors.New("Fatal error config: mail config section is required.")
+		} else {
+			for _, requiredMailVariable := range mailRequiredVariables {
+				if !viper.IsSet("mail." + requiredMailVariable) {
+					return config, errors.New("Fatal error config: no mail " + requiredMailVariable + " was defined.")
+				}
+
+			}
+		}
+
+	}
+
 	return config, nil
 }
