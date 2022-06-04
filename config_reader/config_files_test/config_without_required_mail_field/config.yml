@@ -15,7 +15,6 @@ database = 1
 mailfrom = "sender"
 maildomain = "domain.com"
 host = "10.10.10.10"
-port = 465
 user = "user"
 password = "secret123"
 

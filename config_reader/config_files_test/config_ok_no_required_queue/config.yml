@@ -1,10 +1,3 @@
-[rabbitmq]
-host = "localhost"
-port = 5672
-user = "guest"
-password = "pass"
-queue = "outgoing"
-
 [redis]
 ip = "10.10.10.10"
 port = 6379
@@ -26,5 +19,5 @@ port = 3000
 [notify]
 online = true
 statuschange = true
-queue = true
+queue = false
 mail = true
