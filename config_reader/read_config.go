@@ -65,6 +65,7 @@ func ReadConfig() (Config, error) {
 
 	notifyRequiredVariables := []string{"online", "statuschange", "queue", "mail"}
 	mailRequiredVariables := []string{"mailfrom", "maildomain", "host", "port", "user", "password"}
+	queueRequiredVariables := []string{"host", "port", "user", "password", "queue"}
 
 	viper := viperLib.New()
 
@@ -124,7 +125,7 @@ func ReadConfig() (Config, error) {
 	config.NotifyConfig.SendEmailNotification = viper.GetBool("notify.mail")
 	config.NotifyConfig.SendQueueNotification = viper.GetBool("notify.queue")
 
-	// Mail is required
+	// Check if mail is required Mail is required
 	if config.NotifyConfig.SendEmailNotification {
 		// Mail
 		if !viper.IsSet("mail") {
@@ -133,6 +134,22 @@ func ReadConfig() (Config, error) {
 			for _, requiredMailVariable := range mailRequiredVariables {
 				if !viper.IsSet("mail." + requiredMailVariable) {
 					return config, errors.New("Fatal error config: no mail " + requiredMailVariable + " was defined.")
+				}
+
+			}
+		}
+
+	}
+
+	// Check if queue config is required
+	if config.NotifyConfig.SendQueueNotification {
+		// Rabbitmq
+		if !viper.IsSet("rabbitmq") {
+			return config, errors.New("Fatal error config: rabbitmq config section is required.")
+		} else {
+			for _, requiredQueueVariable := range queueRequiredVariables {
+				if !viper.IsSet("rabbitmq." + requiredQueueVariable) {
+					return config, errors.New("Fatal error config: no rabbitmq " + requiredQueueVariable + " was defined.")
 				}
 
 			}
