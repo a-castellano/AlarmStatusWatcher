@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"log/syslog"
 	"net/http"
@@ -31,11 +32,12 @@ func main() {
 
 	watcher := apiwatcher.APIWatcher{Host: config.AlarmManager.Host, Port: config.AlarmManager.Port}
 
-	_, err := watcher.ShowInfo(alarmManagerRequester)
+	apiInfo, err := watcher.ShowInfo(alarmManagerRequester)
 	if err != nil {
 
 		log.Fatal(err)
 		return
 	}
+	fmt.Println(apiInfo)
 
 }

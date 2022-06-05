@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 type DeviceInfo struct {
@@ -18,7 +19,7 @@ type DeviceInfo struct {
 
 type APIInfo struct {
 	DevicesInfo map[string]DeviceInfo
-	Time        int
+	Time        int64
 }
 
 type Watcher interface {
@@ -97,7 +98,6 @@ func (watcher APIWatcher) ShowInfo(alarmManager AlarmManagerRequester) (APIInfo,
 		deviceInfoRequest := DeviceInfoRequest{}
 		unmarshalDeviceErr := json.Unmarshal(deviceBodySource, &deviceInfoRequest)
 		if unmarshalDeviceErr != nil {
-			fmt.Println("da")
 			return apiInfo, unmarshalDeviceErr
 		}
 		if deviceInfoRequest.Success == false {
@@ -109,5 +109,7 @@ func (watcher APIWatcher) ShowInfo(alarmManager AlarmManagerRequester) (APIInfo,
 		deviceInfo.Name = device_name
 		apiInfo.DevicesInfo[device_id] = deviceInfo
 	}
+	now := time.Now()
+	apiInfo.Time = now.Unix()
 	return apiInfo, nil
 }
