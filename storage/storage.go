@@ -17,7 +17,6 @@ type AlarmStatus struct {
 
 type Storage struct {
 	RedisClient *goredis.Client
-	Connected   bool
 }
 
 func (storage Storage) CheckAndUpdate(ctx context.Context, devicesInfo map[string]apiwatcher.DeviceInfo) (map[string]apiwatcher.DeviceInfo, map[string]string, error) {
@@ -46,6 +45,22 @@ func (storage Storage) CheckAndUpdate(ctx context.Context, devicesInfo map[strin
 			changedStatusMap[deviceId] = fmt.Sprintf("%sChanged Mode from %s to %s ", changedStatusMap[deviceId], storedAlarmStatus.Mode, newDeviceInfo.Mode)
 		}
 		storedAlarmStatus.Mode = newDeviceInfo.Mode
+		if storedAlarmStatus.Firing != newDeviceInfo.Firing {
+			if newDeviceInfo.Firing == true {
+				changedStatusMap[deviceId] = fmt.Sprintf("%sStarted Firing ", changedStatusMap[deviceId])
+			} else {
+				changedStatusMap[deviceId] = fmt.Sprintf("%sStopped Firing ", changedStatusMap[deviceId])
+			}
+		}
+		storedAlarmStatus.Firing = newDeviceInfo.Firing
+		if storedAlarmStatus.Online != newDeviceInfo.Online {
+			if newDeviceInfo.Online == true {
+				changedStatusMap[deviceId] = fmt.Sprintf("%sBecame Online ", changedStatusMap[deviceId])
+			} else {
+				changedStatusMap[deviceId] = fmt.Sprintf("%sBecame Offline ", changedStatusMap[deviceId])
+			}
+		}
+		storedAlarmStatus.Online = newDeviceInfo.Online
 
 	}
 	return newStatusMap, changedStatusMap, nil
