@@ -10,6 +10,7 @@ import (
 
 	apiwatcher "github.com/a-castellano/AlarmStatusWatcher/apiwatcher"
 	config_reader "github.com/a-castellano/AlarmStatusWatcher/config_reader"
+	storage "github.com/a-castellano/AlarmStatusWatcher/storage"
 	goredis "github.com/go-redis/redis/v8"
 )
 
@@ -49,11 +50,12 @@ func main() {
 		DB:       config.RedisServer.Database,
 	})
 	ctx := context.Background()
-	get := rdb.Get(ctx, "key")
-	fmt.Println("val -> ", get.Val())
-	fmt.Println("err -> ", get.Err())
-
-	if get.Err() == goredis.Nil {
-		fmt.Println("key does not exist")
-	}
+	storageInstance := storage.Storage{RedisClient: rdb}
+	newStatusMap, changedStatusMap, _ := storageInstance.CheckAndUpdate(ctx, apiInfo.DevicesInfo)
+	fmt.Println(newStatusMap)
+	fmt.Println(changedStatusMap)
+	apiInfo.DevicesInfo = newStatusMap
+	newStatusMap2, changedStatusMap2, _ := storageInstance.CheckAndUpdate(ctx, apiInfo.DevicesInfo)
+	fmt.Println(newStatusMap2)
+	fmt.Println(changedStatusMap2)
 }

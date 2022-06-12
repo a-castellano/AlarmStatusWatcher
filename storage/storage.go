@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	apiwatcher "github.com/a-castellano/AlarmStatusWatcher/apiwatcher"
 	goredis "github.com/go-redis/redis/v8"
@@ -27,14 +28,16 @@ func (storage Storage) CheckAndUpdate(ctx context.Context, devicesInfo map[strin
 		storedAlarmStatusError := storage.RedisClient.HGetAll(ctx, deviceId).Scan(&storedAlarmStatus)
 		if storedAlarmStatusError != goredis.Nil {
 			if storedAlarmStatusError != nil {
+				fmt.Println("ERRROR", storedAlarmStatusError)
 				return newStatusMap, changedStatusMap, storedAlarmStatusError
-			} else { // Value has not been set yet
-				storedAlarmStatus.Name = ""
-				storedAlarmStatus.Mode = "Not Set"
-				storedAlarmStatus.Firing = false
-				storedAlarmStatus.Online = false
 			}
+		} else { // Value has not been set yet
+			storedAlarmStatus.Name = ""
+			storedAlarmStatus.Mode = "Not Set"
+			storedAlarmStatus.Firing = false
+			storedAlarmStatus.Online = false
 		}
+
 		// Compare Values
 		changedStatusMap[deviceId] = ""
 		if storedAlarmStatus.Name != newDeviceInfo.Name {
@@ -62,6 +65,13 @@ func (storage Storage) CheckAndUpdate(ctx context.Context, devicesInfo map[strin
 		}
 		storedAlarmStatus.Online = newDeviceInfo.Online
 
+		storage.RedisClient.HSet(ctx, deviceId, "name", newDeviceInfo.Name)
+		storage.RedisClient.HSet(ctx, deviceId, "mode", newDeviceInfo.Mode)
+		storage.RedisClient.HSet(ctx, deviceId, "online", newDeviceInfo.Online)
+		storage.RedisClient.HSet(ctx, deviceId, "firing", newDeviceInfo.Firing)
+
+		newStatusMap[deviceId] = newDeviceInfo
+		changedStatusMap[deviceId] = strings.TrimSpace(changedStatusMap[deviceId])
 	}
 	return newStatusMap, changedStatusMap, nil
 }
