@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"log/syslog"
@@ -9,6 +10,7 @@ import (
 
 	apiwatcher "github.com/a-castellano/AlarmStatusWatcher/apiwatcher"
 	config_reader "github.com/a-castellano/AlarmStatusWatcher/config_reader"
+	goredis "github.com/go-redis/redis/v8"
 )
 
 func main() {
@@ -39,5 +41,19 @@ func main() {
 		return
 	}
 	fmt.Println(apiInfo)
+	redisAddress := fmt.Sprintf("%s:%d", config.RedisServer.IP, config.RedisServer.Port)
 
+	rdb := goredis.NewClient(&goredis.Options{
+		Addr:     redisAddress,
+		Password: config.RedisServer.Password,
+		DB:       config.RedisServer.Database,
+	})
+	ctx := context.Background()
+	get := rdb.Get(ctx, "key")
+	fmt.Println("val -> ", get.Val())
+	fmt.Println("err -> ", get.Err())
+
+	if get.Err() == goredis.Nil {
+		fmt.Println("key does not exist")
+	}
 }
