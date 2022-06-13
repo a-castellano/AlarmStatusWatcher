@@ -137,3 +137,4 @@ build_package:
     expire_in: 1 hour
   only:
     - master
+    - package
