@@ -11,7 +11,7 @@ type RabbitmqConfig struct {
 	Password  string
 	Host      string
 	Port      int
-	QueueName int
+	QueueName string
 }
 
 type RedisServer struct {
@@ -163,7 +163,11 @@ func ReadConfig() (Config, error) {
 
 			}
 		}
-
+		config.RabbitmqConfig.QueueName = viper.GetString("rabbitmq.queue")
+		config.RabbitmqConfig.Host = viper.GetString("rabbitmq.host")
+		config.RabbitmqConfig.Port = viper.GetInt("rabbitmq.port")
+		config.RabbitmqConfig.User = viper.GetString("rabbitmq.user")
+		config.RabbitmqConfig.Password = viper.GetString("rabbitmq.password")
 	}
 
 	return config, nil
