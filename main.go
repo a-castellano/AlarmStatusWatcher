@@ -20,8 +20,8 @@ import (
 
 func sendEmail(config config_reader.Config, messageToSend string) {
 
-	from_mail := fmt.Sprintf("%s@%s", config.MailServer.MailFrom, config.MailServer.MailDomain)
-	from := mail.Address{"", from_mail}
+	fromMail := fmt.Sprintf("%s@%s", config.MailServer.MailFrom, config.MailServer.MailDomain)
+	from := mail.Address{"", fromMail}
 	to := mail.Address{"", config.MailServer.Destination}
 	subj := "Alarm Status Changed"
 
@@ -98,7 +98,7 @@ func sendEmail(config config_reader.Config, messageToSend string) {
 	log.Println("Mail sent successfully")
 }
 
-func checkStatus(config config_reader.Config, storageInstance storage.Storage, alarmManagerRequester apiwatcher.Requester, ctx context.Context) {
+func checkStatus(ctx context.Context, config config_reader.Config, storageInstance storage.Storage, alarmManagerRequester apiwatcher.Requester) {
 
 	watcher := apiwatcher.APIWatcher{Host: config.AlarmManager.Host, Port: config.AlarmManager.Port}
 
@@ -117,9 +117,9 @@ func checkStatus(config config_reader.Config, storageInstance storage.Storage, a
 			return
 		}
 		apiInfo.DevicesInfo = newStatusMap
-		for deviceId, message := range changedStatusMap {
+		for deviceID, message := range changedStatusMap {
 			if len(message) > 0 {
-				notificationMessage := fmt.Sprintf("%s - %s", apiInfo.DevicesInfo[deviceId].Name, message)
+				notificationMessage := fmt.Sprintf("%s - %s", apiInfo.DevicesInfo[deviceID].Name, message)
 				if config.NotifyConfig.SendEmailNotification {
 					sendEmail(config, notificationMessage)
 				}
@@ -163,6 +163,6 @@ func main() {
 	}
 	storageInstance := storage.Storage{RedisClient: redisClient}
 
-	checkStatus(config, storageInstance, alarmManagerRequester, ctx)
+	checkStatus(ctx, config, storageInstance, alarmManagerRequester)
 
 }
