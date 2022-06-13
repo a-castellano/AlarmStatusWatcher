@@ -12,6 +12,7 @@ host = "10.10.10.10"
 port = 465
 user = "user"
 password = "secret123"
+destination = "alvaro.castellano.vela@gmail.com"
 
 [alarmmanager]
 host = "10.10.10.10"
