@@ -1,0 +1,218 @@
+- semver: 0.0.1
+  date: 2022-06-13T22:24:50.107813322+02:00
+  packager: ""
+  changes:
+  - commit: d5cdb707817eca2fbf9524b382ab855aabc5f01b
+    note: |-
+      Merge branch 'queue' into 'develop'
+
+      Send message througt rabbitmq queue
+
+      See merge request a-castellano/AlarmStatusWatcher!6
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: de3c218fad64acf6638a82dc629c087c42aaeda9
+    note: |-
+      Merge branch 'send_emails' into 'develop'
+
+      Send emails
+
+      See merge request a-castellano/AlarmStatusWatcher!5
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: 78983a97ee2900a43e7605b883671cedef6dde64
+    note: |-
+      Merge branch 'redis' into 'develop'
+
+      Redis
+
+      See merge request a-castellano/AlarmStatusWatcher!4
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: 236cfbb1f44203e8999ab0d4338b5a504243cb6a
+    note: |-
+      Merge branch 'get_api_info' into 'develop'
+
+      Get api info
+
+      See merge request a-castellano/AlarmStatusWatcher!3
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: a26d91f65308209c3dbe4d06a3c3b2fa76784831
+    note: |-
+      Merge branch 'read_config' into 'develop'
+
+      Read config
+
+      See merge request a-castellano/AlarmStatusWatcher!2
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: e083e100cc3eecf6bdf3404232c9e6c8db7cdf01
+    note: |-
+      Merge branch 'start_project' into 'develop'
+
+      Start project
+
+      See merge request a-castellano/AlarmStatusWatcher!1
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: 451f2d1297d75d29237b67313749f3091bd52cb2
+    note: Initial commit
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: GitHub
+      email: noreply@github.com
+  - commit: 7d7c07943fa5ade1527fd86cf1c91126e3f57e43
+    note: Project ready for develop
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: 96eb26e983b59aa8ff34ed6ff15304a8f53c451e
+    note: Add config file example
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: 517216f414ff5dc4c7e8292007e84d853dc42725
+    note: Setup project
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: 355ef58029aa941395a9823c589b98507dafd7f6
+    note: Validate Config File
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: 563002c1c20a4423baa915637089721505f8e52b
+    note: Write more redconfig tests
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: afecd4d58b31e03af17354dd1222cb9f897f7710
+    note: check redis server config
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: 1b0f60547383451ccd2515801468849153979f88
+    note: Check required variables existence
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: a08b27fa1b26a46e6166c33a75d8ff9195342510
+    note: Get api info
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: a1d6a66f0b0c91b8749e8023e0192ea1fd222777
+    note: Mock
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: 9186ec9ac8f5dc0b70e0ee04dc1c355f02714b46
+    note: Finnish redis tests
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: 321ed36773625059430a85b9ad78bc7f17860da0
+    note: Test using redismock
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: e8d3ecc789d107d8575e842cf373c98192ea6497
+    note: Testing Redis
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: 8e0b9d211d59acf51845a7706d7968e5290156a4
+    note: Lint
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: fef99b35f5974f146843a03ddef7ac43f963b79b
+    note: Fix tests
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: 75c0c3635727dc97059ed8c5f80f1b2e7a90a515
+    note: Send emails
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+  - commit: da94014af1faf736000056ffb8ef3a7ca23110f1
+    note: Send message througt rabbitmq queue
+    author:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
+    committer:
+      name: Álvaro Castellano Vela
+      email: alvaro.castellano.vela@gmail.com
