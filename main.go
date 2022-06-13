@@ -16,7 +16,57 @@ import (
 	config_reader "github.com/a-castellano/AlarmStatusWatcher/config_reader"
 	storage "github.com/a-castellano/AlarmStatusWatcher/storage"
 	goredis "github.com/go-redis/redis/v8"
+	"github.com/streadway/amqp"
 )
+
+func sendMessageByQueue(rabbitmqConfig config_reader.RabbitmqConfig, messageToSend string) error {
+
+	dialString := fmt.Sprintf("amqp://%s:%s@%s:%d/", rabbitmqConfig.User, rabbitmqConfig.Password, rabbitmqConfig.Host, rabbitmqConfig.Port)
+
+	conn, errDial := amqp.Dial(dialString)
+	defer conn.Close()
+
+	if errDial != nil {
+		return errDial
+	}
+
+	channel, errChannel := conn.Channel()
+	defer channel.Close()
+	if errChannel != nil {
+		return errChannel
+	}
+
+	queue, errQueue := channel.QueueDeclare(
+		rabbitmqConfig.QueueName, // name
+		true,                     // durable
+		false,                    // delete when unused
+		false,                    // exclusive
+		false,                    // no-wait
+		nil,                      // arguments
+	)
+	if errQueue != nil {
+		return errQueue
+	}
+
+	// send Job
+
+	err := channel.Publish(
+		"",         // exchange
+		queue.Name, // routing key
+		false,      // mandatory
+		false,
+		amqp.Publishing{
+			DeliveryMode: amqp.Persistent,
+			ContentType:  "text/plain",
+			Body:         []byte(messageToSend),
+		})
+
+	if err != nil {
+		return err
+	}
+	return nil
+
+}
 
 func sendEmail(config config_reader.Config, messageToSend string) {
 
@@ -110,7 +160,6 @@ func checkStatus(ctx context.Context, config config_reader.Config, storageInstan
 			log.Fatal(apiInfoErr)
 			return
 		}
-		fmt.Println(apiInfo)
 		newStatusMap, changedStatusMap, checkAndUpdateErr := storageInstance.CheckAndUpdate(ctx, apiInfo.DevicesInfo)
 		if checkAndUpdateErr != nil {
 			log.Fatal(checkAndUpdateErr)
@@ -122,6 +171,12 @@ func checkStatus(ctx context.Context, config config_reader.Config, storageInstan
 				notificationMessage := fmt.Sprintf("%s - %s", apiInfo.DevicesInfo[deviceID].Name, message)
 				if config.NotifyConfig.SendEmailNotification {
 					sendEmail(config, notificationMessage)
+				}
+				if config.NotifyConfig.SendQueueNotification {
+					sendError := sendMessageByQueue(config.RabbitmqConfig, notificationMessage)
+					if sendError != nil {
+						log.Fatal(sendError)
+					}
 				}
 			}
 
