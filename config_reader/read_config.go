@@ -28,6 +28,7 @@ type MailServer struct {
 	SMTPPort     int
 	SMTPName     string
 	SMTPPassword string
+	Destination  string
 }
 
 type NotifyConfig struct {
@@ -64,7 +65,7 @@ func ReadConfig() (Config, error) {
 	alarmManagerRequiredVariables := []string{"port", "host"}
 
 	notifyRequiredVariables := []string{"online", "statuschange", "queue", "mail"}
-	mailRequiredVariables := []string{"mailfrom", "maildomain", "host", "port", "user", "password"}
+	mailRequiredVariables := []string{"mailfrom", "maildomain", "host", "port", "user", "password", "destination"}
 	queueRequiredVariables := []string{"host", "port", "user", "password", "queue"}
 
 	viper := viperLib.New()
@@ -138,6 +139,14 @@ func ReadConfig() (Config, error) {
 
 			}
 		}
+
+		config.MailServer.MailFrom = viper.GetString("mail.mailfrom")
+		config.MailServer.MailDomain = viper.GetString("mail.maildomain")
+		config.MailServer.SMTPHost = viper.GetString("mail.host")
+		config.MailServer.SMTPPort = viper.GetInt("mail.port")
+		config.MailServer.SMTPName = viper.GetString("mail.user")
+		config.MailServer.SMTPPassword = viper.GetString("mail.password")
+		config.MailServer.Destination = viper.GetString("mail.destination")
 
 	}
 
