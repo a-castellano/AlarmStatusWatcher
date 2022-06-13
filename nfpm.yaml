@@ -14,7 +14,7 @@ homepage: "https://git.windmaker.net/a-castellano/alarmstatuswatcher"
 license: "BSD 2"
 changelog: "changelog.yaml"
 contents:
-- src: ./alarmstatuswatcher
+- src: ./AlarmStatusWatcher
   dst: /usr/local/bin/windmaker-alarmstatuswatcher
 - src: ./packaging/deb/default/windmaker-alarmstatuswatcher
   dst: /etc/default/windmaker-alarmstatuswatcher
