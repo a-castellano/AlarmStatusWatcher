@@ -1,0 +1,27 @@
+name: "windmaker-alarmstatuswatcher"
+arch: "amd64"
+platform: "linux"
+version: "v0.0.1"
+section: "default"
+priority: "extra"
+provides:
+- windmaker-alarmstatuswatcher
+maintainer: "Álvaro Castellano Vela <alvaro.castellano.vela@gmail.com>"
+description: |
+  Alarm Manager Service.
+vendor: "Windmaker"
+homepage: "https://git.windmaker.net/a-castellano/alarmstatuswatcher"
+license: "BSD 2"
+changelog: "changelog.yaml"
+contents:
+- src: ./AlarmStatusWatcher
+  dst: /usr/local/bin/windmaker-alarmstatuswatcher
+- src: ./packaging/deb/default/windmaker-alarmstatuswatcher
+  dst: /etc/default/windmaker-alarmstatuswatcher
+- src: ./packaging/deb/systemd/windmaker-alarmstatuswatcher.service
+  dst: /usr/lib/systemd/system/windmaker-alarmstatuswatcher.service
+overrides:
+  deb:
+    scripts:
+      postinstall: ./packaging/deb/scripts/postinstall.sh
+
