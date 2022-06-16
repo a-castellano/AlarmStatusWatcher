@@ -20,16 +20,22 @@ type Storage struct {
 	RedisClient *goredis.Client
 }
 
-func (storage Storage) CheckAndUpdate(ctx context.Context, devicesInfo map[string]apiwatcher.DeviceInfo) (map[string]apiwatcher.DeviceInfo, map[string]string, error) {
+func (storage Storage) CheckAndUpdate(ctx context.Context, devicesInfo map[string]apiwatcher.DeviceInfo) (map[string]apiwatcher.DeviceInfo, map[string]string, map[string]bool, map[string]bool, error) {
 	newStatusMap := make(map[string]apiwatcher.DeviceInfo)
+	onlineChangedMap := make(map[string]bool)
+	modeChangedMap := make(map[string]bool)
 	changedStatusMap := make(map[string]string)
 	for deviceId, newDeviceInfo := range devicesInfo {
+
+		onlineChangedMap[deviceId] = false
+		modeChangedMap[deviceId] = false
+
 		var storedAlarmStatus AlarmStatus
 		storedAlarmStatusError := storage.RedisClient.HGetAll(ctx, deviceId).Scan(&storedAlarmStatus)
 		if storedAlarmStatusError != goredis.Nil {
 			if storedAlarmStatusError != nil {
 				fmt.Println("ERRROR", storedAlarmStatusError)
-				return newStatusMap, changedStatusMap, storedAlarmStatusError
+				return newStatusMap, changedStatusMap, modeChangedMap, onlineChangedMap, storedAlarmStatusError
 			}
 		} else { // Value has not been set yet
 			storedAlarmStatus.Name = ""
@@ -46,9 +52,11 @@ func (storage Storage) CheckAndUpdate(ctx context.Context, devicesInfo map[strin
 		storedAlarmStatus.Name = newDeviceInfo.Name
 		if storedAlarmStatus.Mode != newDeviceInfo.Mode {
 			changedStatusMap[deviceId] = fmt.Sprintf("%sChanged Mode from %s to %s ", changedStatusMap[deviceId], storedAlarmStatus.Mode, newDeviceInfo.Mode)
+			modeChangedMap[deviceId] = true
 		}
 		storedAlarmStatus.Mode = newDeviceInfo.Mode
 		if storedAlarmStatus.Firing != newDeviceInfo.Firing {
+			modeChangedMap[deviceId] = true
 			if newDeviceInfo.Firing == true {
 				changedStatusMap[deviceId] = fmt.Sprintf("%sStarted Firing ", changedStatusMap[deviceId])
 			} else {
@@ -57,6 +65,7 @@ func (storage Storage) CheckAndUpdate(ctx context.Context, devicesInfo map[strin
 		}
 		storedAlarmStatus.Firing = newDeviceInfo.Firing
 		if storedAlarmStatus.Online != newDeviceInfo.Online {
+			onlineChangedMap[deviceId] = true
 			if newDeviceInfo.Online == true {
 				changedStatusMap[deviceId] = fmt.Sprintf("%sBecame Online ", changedStatusMap[deviceId])
 			} else {
@@ -73,5 +82,5 @@ func (storage Storage) CheckAndUpdate(ctx context.Context, devicesInfo map[strin
 		newStatusMap[deviceId] = newDeviceInfo
 		changedStatusMap[deviceId] = strings.TrimSpace(changedStatusMap[deviceId])
 	}
-	return newStatusMap, changedStatusMap, nil
+	return newStatusMap, changedStatusMap, modeChangedMap, onlineChangedMap, nil
 }

@@ -22,7 +22,7 @@ func TestNewsReadEmptySet(t *testing.T) {
 
 	devicesInfo[key] = deviceInfo
 
-	newStatus, changedStatusMap, err := storageInstance.CheckAndUpdate(ctx, devicesInfo)
+	newStatus, changedStatusMap, _, _, err := storageInstance.CheckAndUpdate(ctx, devicesInfo)
 	if err != nil {
 		t.Error("TestNewsReadEmptySet should not fail. Error was ", err.Error())
 	}
@@ -55,12 +55,12 @@ func TestNewsReadNotChanged(t *testing.T) {
 
 	devicesInfo[key] = deviceInfo
 
-	_, changedStatusMap, err := storageInstance.CheckAndUpdate(ctx, devicesInfo)
+	_, changedStatusMap, _, _, err := storageInstance.CheckAndUpdate(ctx, devicesInfo)
 	if err != nil {
-		t.Error("TestNewsReadEmptySet should not fail. Error was ", err.Error())
+		t.Error("TestNewsReadNotChanged should not fail. Error was ", err.Error())
 	}
 	if changedStatusMap[key] != "" {
-		t.Error("TestNewsReadEmptySet, should be empty. It contains ", changedStatusMap[key])
+		t.Error("TestNewsReadNotChanged, should be empty. It contains ", changedStatusMap[key])
 	}
 
 }
@@ -85,12 +85,18 @@ func TestNewsReadStartedFirirng(t *testing.T) {
 
 	devicesInfo[key] = deviceInfo
 
-	_, changedStatusMap, err := storageInstance.CheckAndUpdate(ctx, devicesInfo)
+	_, changedStatusMap, modeChangedMap, onlineChangedMap, err := storageInstance.CheckAndUpdate(ctx, devicesInfo)
 	if err != nil {
-		t.Error("TestNewsReadEmptySet should not fail. Error was ", err.Error())
+		t.Error("TestNewsReadStartedFirirng should not fail. Error was ", err.Error())
 	}
 	if changedStatusMap[key] != "Started Firing" {
-		t.Errorf("TestNewsReadEmptySet, should be 'Started Firing'. It contains '%s'", changedStatusMap[key])
+		t.Errorf("TestNewsReadStartedFirirng, should be 'Started Firing'. It contains '%s'", changedStatusMap[key])
+	}
+	if modeChangedMap[key] != true {
+		t.Error("TestNewsReadStartedFirirng, modeChangedMap should be true")
+	}
+	if onlineChangedMap[key] != false {
+		t.Error("TestNewsReadStartedFirirng, onlineChangedMap should be false")
 	}
 
 }
@@ -115,12 +121,18 @@ func TestNewsReadStoppedFirirng(t *testing.T) {
 
 	devicesInfo[key] = deviceInfo
 
-	_, changedStatusMap, err := storageInstance.CheckAndUpdate(ctx, devicesInfo)
+	_, changedStatusMap, modeChangedMap, onlineChangedMap, err := storageInstance.CheckAndUpdate(ctx, devicesInfo)
 	if err != nil {
-		t.Error("TestNewsReadEmptySet should not fail. Error was ", err.Error())
+		t.Error("TestNewsReadStoppedFirirng should not fail. Error was ", err.Error())
 	}
 	if changedStatusMap[key] != "Stopped Firing" {
-		t.Errorf("TestNewsReadEmptySet, should be 'Stopped Firing'. It contains '%s'", changedStatusMap[key])
+		t.Errorf("TestNewsReadStoppedFirirng, should be 'Stopped Firing'. It contains '%s'", changedStatusMap[key])
+	}
+	if modeChangedMap[key] != true {
+		t.Error("TestNewsReadStoppedFirirng, modeChangedMap should be true")
+	}
+	if onlineChangedMap[key] != false {
+		t.Error("TestNewsReadStoppedFirirng, onlineChangedMap should be false")
 	}
 
 }
@@ -145,12 +157,18 @@ func TestNewsReadBecameOffline(t *testing.T) {
 
 	devicesInfo[key] = deviceInfo
 
-	_, changedStatusMap, err := storageInstance.CheckAndUpdate(ctx, devicesInfo)
+	_, changedStatusMap, modeChangedMap, onlineChangedMap, err := storageInstance.CheckAndUpdate(ctx, devicesInfo)
 	if err != nil {
-		t.Error("TestNewsReadEmptySet should not fail. Error was ", err.Error())
+		t.Error("TestNewsReadBecameOffline should not fail. Error was ", err.Error())
 	}
 	if changedStatusMap[key] != "Became Offline" {
-		t.Errorf("TestNewsReadEmptySet, should be 'Became Offline'. It contains '%s'", changedStatusMap[key])
+		t.Errorf("TestNewsReadBecameOffline, should be 'Became Offline'. It contains '%s'", changedStatusMap[key])
+	}
+	if modeChangedMap[key] != false {
+		t.Error("TestNewsReadBecameOffline, modeChangedMap should be false")
+	}
+	if onlineChangedMap[key] != true {
+		t.Error("TestNewsReadBecameOffline, onlineChangedMap should be true")
 	}
 
 }
@@ -175,12 +193,18 @@ func TestNewsReadBecameOnline(t *testing.T) {
 
 	devicesInfo[key] = deviceInfo
 
-	_, changedStatusMap, err := storageInstance.CheckAndUpdate(ctx, devicesInfo)
+	_, changedStatusMap, modeChangedMap, onlineChangedMap, err := storageInstance.CheckAndUpdate(ctx, devicesInfo)
 	if err != nil {
-		t.Error("TestNewsReadEmptySet should not fail. Error was ", err.Error())
+		t.Error("TestNewsReadBecameOnline should not fail. Error was ", err.Error())
 	}
 	if changedStatusMap[key] != "Became Online" {
-		t.Errorf("TestNewsReadEmptySet, should be 'Became Online'. It contains '%s'", changedStatusMap[key])
+		t.Errorf("TestNewsReadBecameOnline, should be 'Became Online'. It contains '%s'", changedStatusMap[key])
+	}
+	if modeChangedMap[key] != false {
+		t.Error("TestNewsReadBecameOnline, modeChangedMap should be false")
+	}
+	if onlineChangedMap[key] != true {
+		t.Error("TestNewsReadBecameOnline, onlineChangedMap should be true")
 	}
 
 }

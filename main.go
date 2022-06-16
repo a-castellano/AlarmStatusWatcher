@@ -160,7 +160,7 @@ func checkStatus(ctx context.Context, config config_reader.Config, storageInstan
 			log.Fatal(apiInfoErr)
 			return
 		}
-		newStatusMap, changedStatusMap, checkAndUpdateErr := storageInstance.CheckAndUpdate(ctx, apiInfo.DevicesInfo)
+		newStatusMap, changedStatusMap, modeChangedMap, onlineChangedMap, checkAndUpdateErr := storageInstance.CheckAndUpdate(ctx, apiInfo.DevicesInfo)
 		if checkAndUpdateErr != nil {
 			log.Fatal(checkAndUpdateErr)
 			return
@@ -170,12 +170,16 @@ func checkStatus(ctx context.Context, config config_reader.Config, storageInstan
 			if len(message) > 0 {
 				notificationMessage := fmt.Sprintf("%s - %s", apiInfo.DevicesInfo[deviceID].Name, message)
 				if config.NotifyConfig.SendEmailNotification {
-					sendEmail(config, notificationMessage)
+					if (config.NotifyConfig.NotifyOffline == true && onlineChangedMap[deviceID] == true) || (config.NotifyConfig.NotifyStatusChange == true && modeChangedMap[deviceID] == true) {
+						sendEmail(config, notificationMessage)
+					}
 				}
 				if config.NotifyConfig.SendQueueNotification {
-					sendError := sendMessageByQueue(config.RabbitmqConfig, notificationMessage)
-					if sendError != nil {
-						log.Fatal(sendError)
+					if (config.NotifyConfig.NotifyOffline == true && onlineChangedMap[deviceID] == true) || (config.NotifyConfig.NotifyStatusChange == true && modeChangedMap[deviceID] == true) {
+						sendError := sendMessageByQueue(config.RabbitmqConfig, notificationMessage)
+						if sendError != nil {
+							log.Fatal(sendError)
+						}
 					}
 				}
 			}
