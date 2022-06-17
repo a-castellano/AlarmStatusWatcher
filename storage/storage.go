@@ -50,7 +50,7 @@ func (storage Storage) CheckAndUpdate(ctx context.Context, devicesInfo map[strin
 			changedStatusMap[deviceId] = fmt.Sprintf("%sChanged Name to %s ", changedStatusMap[deviceId], newDeviceInfo.Name)
 		}
 		storedAlarmStatus.Name = newDeviceInfo.Name
-		if storedAlarmStatus.Mode != newDeviceInfo.Mode {
+		if storedAlarmStatus.Mode != newDeviceInfo.Mode && newDeviceInfo.Mode != "" {
 			changedStatusMap[deviceId] = fmt.Sprintf("%sChanged Mode from %s to %s ", changedStatusMap[deviceId], storedAlarmStatus.Mode, newDeviceInfo.Mode)
 			modeChangedMap[deviceId] = true
 		}
